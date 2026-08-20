@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vinyl-cutter"
+version = "0.1.0"
+description = "Drive a Roland CAMM-1 GX-24 vinyl cutter directly over USB"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+# No dependencies, on purpose. The SVG flattener is stdlib so this installs on
+# any Python without a compiler or a GEOS build. See history.md.
+dependencies = []
+
+[project.scripts]
+cutter = "cutter.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

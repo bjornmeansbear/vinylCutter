@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Generated jobs and previews -- keep the directory, not its contents.
+jobs/*
+!jobs/.gitkeep
+
+.DS_Store
+
+# Web
+web/node_modules/
+web/.svelte-kit/
+web/build/
+web/.env
+config/presets.json

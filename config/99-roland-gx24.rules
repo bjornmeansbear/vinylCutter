@@ -1,0 +1,16 @@
+# Roland CAMM-1 GX-24 -- make the USB printer node writable without root.
+#
+# Install on the Pi:
+#   sudo cp config/99-roland-gx24.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules && sudo udevadm trigger
+#   sudo usermod -aG lp "$USER"        # log out and back in
+#
+# Then re-plug the cutter and check:  ls -l /dev/usb/lp0
+#
+# Roland DG's USB vendor ID is 0x0b3c. Confirm your machine's product ID with
+# `lsusb` and narrow the rule below if you have other Roland devices attached.
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="0b3c", MODE="0660", GROUP="lp", SYMLINK+="gx24"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0b3c", MODE="0660", GROUP="lp"
+
+# Fallback for kernels that expose the node under the older usb subsystem.
+KERNEL=="lp[0-9]*", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0b3c", MODE="0660", GROUP="lp", SYMLINK+="gx24"

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Dev shim: run the CLI from source without installing.
+# On the Pi, `pip install -e .` puts a real `cutter` on PATH and this is unused.
+root=$(cd "$(dirname "$0")/.." && pwd)
+PYTHONPATH="$root/src" exec python3 -m cutter.cli "$@"
