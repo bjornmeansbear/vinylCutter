@@ -263,6 +263,43 @@ config load.
 
 ---
 
+## 2026-08-20 — License: AGPL-3.0-or-later
+
+Chose the **GNU Affero GPL v3 or later**, not GPL-3.0 and not a permissive
+license.
+
+The deciding factor is that this project ships a web server. Plain GPL only
+triggers on *distribution* — someone could take this, improve it, run it as a
+hosted cutting service, and never share a line back, because they never handed
+anyone a copy. **AGPL section 13 closes that gap**: run a modified version that
+people interact with over a network, and those people are entitled to the source.
+
+Permissive (MIT/Apache) was considered and rejected on purpose. This exists
+because a vendor stopped maintaining something people depend on. A permissive
+license would let exactly that happen again to this code; copyleft is the part
+that prevents enclosure.
+
+Also the right neighbourhood: [Inkcut](https://github.com/inkcut/inkcut) is
+GPL-3.0 and the Fab Lab lineage this grew from is libre throughout.
+
+Known tradeoff, accepted: some organisations ban AGPL internally (Google, among
+others). For a personal fab tool that is not a cost worth optimising against.
+
+Implementation:
+- `LICENSE` — full AGPL-3.0 text
+- `SPDX-License-Identifier: AGPL-3.0-or-later` on all 26 source files
+- `pyproject.toml` uses the PEP 639 SPDX expression (needs setuptools>=77)
+- **The web app footer links to its own source.** That is not decoration — it is
+  how the running service satisfies section 13. A fork must repoint it.
+
+---
+
+## 2026-08-20 — Published
+
+Pushed to `git@github.com:bjornmeansbear/vinylCutter.git`.
+
+---
+
 ## Reference links
 
 **This machine**
