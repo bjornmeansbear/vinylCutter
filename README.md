@@ -85,6 +85,52 @@ No dependencies. Python 3.10+.
 
 ### On the Raspberry Pi
 
+**Choosing a board.** Anything from a Pi 3 up runs everything. A **Pi Zero /
+Zero W is CLI-only** — see the constraints below before committing to one.
+
+| | Zero / Zero W | Zero 2 W and up |
+|---|---|---|
+| Architecture | ARMv6, single core, 512MB | arm64, quad core |
+| OS image | Raspberry Pi OS Lite **32-bit** | Lite 64-bit |
+| `cutter` CLI | works | works |
+| Web server | no — official Node dropped ARMv6 at v11 (2019) | works |
+
+#### Pi Zero W: one USB port, and the cutter needs it
+
+The Zero has exactly **one data-capable USB port**, and a port cannot be a USB
+host and a USB gadget at once. So:
+
+- The USB port goes to the **cutter**, via a micro-USB-male to USB-A-female OTG
+  adapter. You need that adapter; it is not optional.
+- Network access therefore has to come from **built-in WiFi**, which is fine —
+  WiFi does not use the USB port.
+- `scripts/enable-usb-gadget.sh` is still useful for first-boot access and
+  troubleshooting, but only while the cutter is unplugged. It is not how you run
+  the machine day to day.
+
+#### Split the work across two machines
+
+`convert` and `send` are separate commands on purpose, so they can run in
+different places. On a 512MB single-core board, put the CPU work on your laptop
+and let the Pi be a reliable pipe:
+
+```bash
+# on your laptop -- SVG parsing, flattening, path ordering
+cutter convert logo.svg --force 110 --speed 20 -o logo.hpgl
+cutter preview logo.hpgl -o check.svg      # eyeball it before it exists in vinyl
+
+# hand it over
+scp logo.hpgl pi@raspberrypi.local:~/
+
+# on the Pi -- chunked writes to the device node, almost no work at all
+cutter send logo.hpgl
+```
+
+This is a better fit for a Zero W than running everything on it, and it costs
+nothing: the HPGL is identical either way.
+
+#### Bootstrap
+
 Use the bootstrap script — it handles the venv (required: Pi OS marks the system
 Python externally-managed), the udev rule, the `lp` group, and the `usblp`
 kernel module:
