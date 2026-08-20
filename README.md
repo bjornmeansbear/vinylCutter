@@ -88,12 +88,30 @@ No dependencies. Python 3.10+.
 **Choosing a board.** Anything from a Pi 3 up runs everything. A **Pi Zero /
 Zero W is CLI-only** — see the constraints below before committing to one.
 
-| | Zero / Zero W | Zero 2 W and up |
-|---|---|---|
-| Architecture | ARMv6, single core, 512MB | arm64, quad core |
-| OS image | Raspberry Pi OS Lite **32-bit** | Lite 64-bit |
-| `cutter` CLI | works | works |
-| Web server | no — official Node dropped ARMv6 at v11 (2019) | works |
+| | Zero / Zero W | Zero 2 W | **Pi 3 B and up** |
+|---|---|---|---|
+| Architecture | ARMv6, 1 core, 512MB | arm64, 4 core, 512MB | arm64, 4 core, 1GB+ |
+| OS image | Lite **32-bit** | Lite 64-bit | Lite 64-bit |
+| USB for the cutter | micro-USB + OTG adapter | micro-USB + OTG adapter | **full-size USB-A, plug straight in** |
+| `cutter` CLI | works | works | works |
+| Web server | no — official Node dropped ARMv6 at v11 (2019) | works | works |
+| Direct-to-laptop | USB gadget mode | USB gadget mode | **Ethernet** (no gadget mode) |
+
+A **Pi 3 B is the easy choice** if you have one: four real USB-A ports so the
+cutter needs no adapter, arm64 so the web server runs, and an Ethernet port that
+gives you a network path independent of whatever the building's WiFi does.
+
+Two things to know about it:
+
+- **No USB gadget mode.** The Pi 3's single OTG port is consumed internally by
+  the USB hub / Ethernet chip, so `scripts/enable-usb-gadget.sh` does not apply.
+  To connect it straight to a laptop, run an Ethernet cable and turn on macOS
+  **Internet Sharing** (System Settings → General → Sharing) over that
+  interface — the Pi gets an address and internet in one step.
+- **Use a real 2.5A power supply.** An underpowered Pi 3 browns out its USB
+  ports under load, and the symptom is dropped bytes and failed writes to the
+  cutter — which looks exactly like a communication bug in this software. If
+  cuts start truncating for no reason, suspect the PSU before the code.
 
 #### Pi Zero W: one USB port, and the cutter needs it
 
@@ -248,6 +266,11 @@ npm install
 npm run dev          # http://<pi>:5173, bound to all interfaces
 npm run build && node build   # production
 ```
+
+On a 1GB Pi 3 the install and build work but take a few minutes. If it runs out
+of memory, build on your laptop instead and copy `web/build/` plus
+`web/package.json` over — `adapter-node` output is self-contained and only needs
+`node build` to run.
 
 It shells out to the `cutter` CLI rather than reimplementing any geometry, so
 there is one source of truth for what the machine receives. Configure with
