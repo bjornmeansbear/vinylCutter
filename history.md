@@ -300,6 +300,37 @@ Pushed to `git@github.com:bjornmeansbear/vinylCutter.git`.
 
 ---
 
+## Ideas and future additions
+
+Not committed to, just parked with enough context to pick up later.
+
+**Other machines.** See `docs/other-machines.md` for the full map. Short version:
+another HPGL cutter (Summa, Graphtec in HPGL mode, generic imports) is nearly
+free — mostly a device profile, and `hpgl.py` already gates the Roland `!`
+commands behind `roland_ext` for exactly this. A Silhouette Cameo would need a
+`gpgl.py` emitter plus a libusb transport, since Silhouette uses a
+vendor-specific USB interface rather than the printer class `usblp` gives us. An
+AxiDraw would need a motion planner as well as an emitter — use
+[saxi](https://github.com/nornagon/saxi) or axicli instead.
+
+**Cut features worth having**, roughly in order of usefulness — all present in
+Inkcut, none here yet: weedlines, copies and tiling, mirroring (needed for heat
+transfer vinyl), registration marks for print-and-cut.
+
+**vpype as an optional pass.** Rejected as a dependency (Shapely/GEOS, see
+above), but if it is installed it would be a better line optimiser than the
+greedy nearest-neighbour in `optimize.py`. Detect and use, never require.
+
+**Bidirectional device I/O.** USB printer class is bidirectional and the GX-24
+answers HPGL status queries. Real flow control would beat the current open-loop
+chunk-and-pause, but readback is firmware-dependent, so this needs the machine in
+front of you to develop against.
+
+**systemd unit** so the web server starts on boot, plus mDNS so it is reachable
+at a name rather than an IP.
+
+---
+
 ## Reference links
 
 **This machine**
@@ -323,3 +354,10 @@ Pushed to `git@github.com:bjornmeansbear/vinylCutter.git`.
 - [Our Fab Academy 2015 week 2](https://vkbg.github.io/week2.html)
 - [Fab Academy 2016 BCN — GX-24 on a Raspberry Pi](https://archive.fabacademy.org/2016/fablabbcn2016/students/27/exercise07a.html)
 - [Waag/Fablab Amsterdam — using the Roland vinyl cutter](https://fablab.waag.org/Vinyl%20Cutter/How%20to%20use%20the%20Roland%20vinyl%20cutter/)
+
+**Other machines** (full notes in `docs/other-machines.md`)
+- [inkscape-silhouette](https://github.com/fablabnbg/inkscape-silhouette) · [GPGL command notes](https://github.com/fablabnbg/inkscape-silhouette/blob/main/Commands.md)
+- [robocut](https://github.com/Timmmm/robocut)
+- [EBB command set](https://evil-mad.github.io/EggBot/ebb.html) · [Schmalz EBB hardware docs](http://www.schmalzhaus.com/EBB/EBBCommands.html)
+- [saxi](https://github.com/nornagon/saxi) · [axicli/pyaxidraw](https://axidraw.com/doc/cli_api/)
+- [vpype-gcode](https://github.com/plottertools/vpype-gcode)

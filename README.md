@@ -1,7 +1,7 @@
 # vinylCutter
 
 Drive a Roland CAMM-1 GX-24 directly over USB. SVG in, HPGL out, bytes to the
-device node — no CUPS, no printer driver, no vendor software.
+device node — no driver, no vendor software.
 
 Roland's own support for this machine has stopped: the drivers are Windows-only,
 the CutStudio Illustrator plugin ends at CC 2020, and there is no macOS driver at
@@ -169,6 +169,12 @@ src/cutter/
 config/         udev rule
 tests/          run with: python3 -m unittest discover -s tests -t .
 ```
+
+## Other machines
+
+Notes on Silhouette/Cameo (GPGL), AxiDraw (EBB), and other HPGL cutters — plus
+what it would take to support them here — are in
+[docs/other-machines.md](docs/other-machines.md).
 
 ## Why no CUPS
 
