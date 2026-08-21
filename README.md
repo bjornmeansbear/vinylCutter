@@ -183,14 +183,43 @@ anywhere there is no device node — so on your Mac nothing can move by accident
 
 ### Preparing artwork
 
-The cutter follows path geometry and nothing else. Before exporting SVG from
-Illustrator (or anywhere):
+The cutter follows path geometry and nothing else. **What you see on screen is
+not what gets cut — the outline is.** Every step below is about making the paths
+match the picture.
 
 - **Convert text to outlines.** Type is skipped silently, not cut.
 - **Expand strokes.** A 2pt stroke is a centerline to a cutter, not a shape.
-- **Expand compound shapes and release clipping masks.** Appearance-based
-  geometry does not survive.
-- Fills mean nothing. Only the paths matter.
+- **Union overlapping shapes.** Pathfinder → Unite. This is the one that ruins
+  material — see below.
+- **Expand live effects and compound *shapes*** (Pathfinder shape modes, offset
+  path, warps). Appearance-based geometry does not survive export.
+- **Release clipping masks.** A mask hides geometry visually; the cutter still
+  gets the whole path.
+- Fills and colours mean nothing. Only path geometry matters.
+
+#### Union overlapping shapes — but keep compound paths
+
+These sound like the same thing and are opposites.
+
+**Overlapping paths must be united.** Two circles that visually read as one blob
+are still two closed paths, and the cutter will faithfully cut both complete
+outlines — including the arcs buried inside the silhouette. The result has cut
+lines running through the middle of your shape, and the overlap regions fall out
+as loose pieces when you weed. Pathfinder → **Unite** replaces them with the one
+outline you actually see.
+
+The classic trap is a **script logotype**: expand the strokes and every place a
+letter joins its neighbour becomes an overlap. It looks perfect on screen and
+cuts into confetti.
+
+**Compound paths must be kept.** The counter of an `O`, the holes in an `&` — a
+compound path is how you say "cut the outside *and* the inside." That is correct
+and necessary. Do not release those.
+
+The distinction: **unite things that overlap, keep things that are holes.**
+
+Also watch for **self-intersecting paths** — a figure-eight or a bowtie drawn as
+one path has the same problem, and Unite on a single object will clean it up.
 
 Hidden layers are skipped — Illustrator exports them as `display:none` rather
 than omitting them, so without that check a file that looks like one logo cuts

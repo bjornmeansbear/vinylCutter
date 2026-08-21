@@ -101,8 +101,9 @@
   <div>
     <h2>New job</h2>
     <p class="muted">
-      Outline text and expand strokes before exporting. Fills are ignored &mdash;
-      only path geometry is cut.
+      Outline text, expand strokes, and <strong>union overlapping shapes</strong>
+      before exporting &mdash; overlaps cut as separate full outlines. Keep
+      compound paths; those are your holes. Fills are ignored.
     </p>
   </div>
 

@@ -313,6 +313,17 @@ vendor-specific USB interface rather than the printer class `usblp` gives us. An
 AxiDraw would need a motion planner as well as an emitter — use
 [saxi](https://github.com/nornagon/saxi) or axicli instead.
 
+**Preflight overlap detection.** The single most expensive artwork mistake is
+un-unioned overlapping shapes: two closed paths that read as one blob on screen
+cut as two full outlines, putting cut lines through the middle of the shape and
+dropping the overlap regions out during weeding. Nothing catches this today —
+the preview renders it faithfully, but faithfully wrong-looking geometry is easy
+to skim past. A segment-intersection check with a bounding-box prefilter would
+be O(n^2) on segments but tractable with the prefilter, and could warn "3 paths
+intersect — did you mean to Unite them?" before anything reaches vinyl. Must not
+flag compound paths (holes are nested, not intersecting), which is the whole
+subtlety.
+
 **Cut features worth having**, roughly in order of usefulness — all present in
 Inkcut, none here yet: weedlines, copies and tiling, mirroring (needed for heat
 transfer vinyl), registration marks for print-and-cut.
